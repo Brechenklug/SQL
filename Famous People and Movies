@@ -1,0 +1,74 @@
+--Create a table of famous people, the year they were born, and if they are married
+
+Create TABLE famous_people (id INTEGER PRIMARY KEY, name TEXT, age INTEGER, married TEXT);
+
+INSERT INTO famous_people values (1, "Chris Evans", 1981, "No");
+INSERT INTO famous_people values (2, "Chris Hemsworth", 1983, "Yes");
+INSERT INTO famous_people values (3, "Robert Downey, Jr.", 1965, "Yes");
+INSERT INTO famous_people values (4, "Scarlett Johansson", 1984, "Yes");
+INSERT INTO famous_people values (5, "Mark Ruffalo", 1967, "Yes");
+INSERT INTO famous_people values (6, "Tom Holland", 1996, "No");
+INSERT INTO famous_people values (7, "Samuel L. Jackson", 1948, "Yes");
+INSERT INTO famous_people values (8, "Tom Hiddleston", 1981, "No");
+INSERT INTO famous_people values (9, "Gwyneth Paltrow", 1972, "Yes");
+INSERT INTO famous_people values (10, "Jon Favreau", 1966, "Yes");
+INSERT INTO famous_people values (11, "Marisa Tomei", 1964, "No");
+INSERT INTO famous_people values (12, "Natalie Portman", 1981, "Yes");
+
+SELECT * FROM famous_people ORDER BY age;
+
+--Create a table of the famous people (in the table above) and what movies they are in
+
+CREATE TABLE movies (name TEXT, movie TEXT);
+
+INSERT INTO movies values ("Chris Evans", "Avengers");
+INSERT INTO movies values ("Chris Evans", "Spiderman: Homecoming");
+INSERT INTO movies values ("Chris Evans", "Captain America: Civil War");
+INSERT INTO movies values ("Chris Hemsworth", "Avengers");
+INSERT INTO movies values ("Chris Hemsworth", "Thor");
+INSERT INTO movies values ("Robert Downey, Jr.", "Avengers");
+INSERT INTO movies values ("Robert Downey, Jr.", "Iron Man");
+INSERT INTO movies values ("Robert Downey, Jr.", "Spiderman: Homecoming");
+INSERT INTO movies values ("Robert Downey, Jr.", "Captain America: Civil War");
+INSERT INTO movies values ("Scarlett Johansson", "Avengers");INSERT INTO movies values ("Scarlett Johansson", "Spiderman: Homecoming");
+INSERT INTO movies values ("Scarlett Johansson", "Captain America: Civil War");
+INSERT INTO movies values ("Mark Ruffalo", "Avengers");
+INSERT INTO movies values ("Tom Holland", "Avengers");
+INSERT INTO movies values ("Tom Holland", "Spiderman: Homecoming");
+INSERT INTO movies values ("Tom Holland", "Captain America: Civil War");
+INSERT INTO movies values ("Samuel L. Jackson", "Avengers");
+INSERT INTO movies values ("Samuel L. Jackson", "Iron Man");
+INSERT INTO movies values ("Tom Hiddleston", "Avengers");
+INSERT INTO movies values ("Tom Hiddleston", "Thor");
+INSERT INTO movies values ("Gwyneth Paltrow", "Iron Man");
+INSERT INTO movies values ("Gwyneth Paltrow", "Captain America: Civil War");
+INSERT INTO movies values ("Jon Favreau", "Iron Man");
+INSERT INTO movies values ("Jon Favreau", "Spiderman: Homecoming");
+INSERT INTO movies values ("Marisa Tomei", "Spiderman: Homecoming");
+INSERT INTO movies values ("Marisa Tomei", "Captain America: Civil War");
+INSERT INTO movies values ("Natalie Portman", "Thor");
+
+SELECT * FROM movies ORDER BY movie;
+
+--What are the movies of that celebries were born after 1980 and are NOT married?
+SELECT f.name, m.movie, f.married 
+FROM movies m
+LEFT OUTER JOIN famous_people f 
+ON f.name = m.name 
+WHERE f.married = "No" AND f.age > 1980;
+
+--What are the celebrities and their ages if they appeared in Avengers or Thor?
+SELECT f.name, f.age, m.movie
+FROM famous_people f
+LEFT OUTER JOIN movies m
+ON f.name = m.name 
+WHERE m.movie = "Avengers" OR m.movie = "Thor" 
+ORDER BY f.name AND f.age; 
+
+--What celebritites appeared in the movies Avengers and Captain America: Civil War?
+SELECT f.name, m.movie
+FROM famous_people f 
+LEFT OUTER JOIN movies m
+ON f.name = m.name
+WHERE m.movie = "Avengers" OR m.movie = "Captain America: Civil War"
+ORDER BY f.name; 
