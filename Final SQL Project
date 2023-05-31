@@ -1,4 +1,4 @@
-Here are the answers to some questions that were provided as well as questions that I created that I thought could be answered by the database that was provided. 
+Here are the answers to some questions that were provided as well as questions that I created that I thought could be interesting to have answered from this database provided. 
 
 -- 1. Show Customers (their full names, customer ID, and country) who are not in the US. (Hint: != or <> can be used to say "is not equal to").
 SELECT CustomerID, 
