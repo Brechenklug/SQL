@@ -1,0 +1,124 @@
+Here are the answers to some questions that were provided as well as questions that I created that I thought could be answered by the database that was provided. 
+
+-- 1. Show Customers (their full names, customer ID, and country) who are not in the US. (Hint: != or <> can be used to say "is not equal to").
+SELECT CustomerID, 
+    FirstName, 
+    LastName, 
+    Country
+FROM chinook.customers
+WHERE country <> "USA";
+
+-- 2. Show only the Customers from Brazil.
+SELECT *
+FROM chinook.customers
+WHERE Country = "Brazil";
+
+-- 3. Find the Invoices of customers who are from Brazil. The resulting table should show the customer's full name, Invoice ID, Date of the invoice, and billing country.
+SELECT c.FirstName, 
+    c.LastName, 
+    i.InvoiceID, 
+    i.InvoiceDate, 
+    i.BillingCountry
+FROM chinook.invoices i
+LEFT JOIN chinook.customers c
+ON c.Customerid = i.Customerid
+WHERE i.BillingCountry = "Brazil";
+
+-- 4. Show the Employees who are Sales Agents.
+SELECT *
+FROM chinook.employees
+WHERE Title = 'Sales Support Agent';
+
+
+-- 5. Find a unique/distinct list of billing countries from the Invoice table.
+SELECT DISTINCT BillingCountry
+FROM chinook.invoices;
+
+-- 6. Provide a query that shows the invoices associated with each sales agent. The resulting table should include the Sales Agent's full name.
+SELECT e.FirstName, 
+    e.LastName, 
+    i.InvoiceId AS "Invoice"
+FROM chinook.employees e
+JOIN chinook.customers c
+ON e.EmployeeId = c.SupportRepId
+JOIN chinook.invoices i
+ON c.CustomerId = i.CustomerId;
+
+-- 7. Show the Invoice Total, Customer name, Country, and Sales Agent name for all invoices and customers.
+SELECT c.FirstName AS "customer_first", 
+    c.LastName AS "customer_last", 
+    c.Country AS "country", 
+    e.FirstName AS "salesrep_first", 
+    e.LastName AS "salesrep_last", 
+    i.Total
+FROM chinook.employees e
+JOIN chinook.customers c
+ON e.EmployeeId = c.SupportRepId
+JOIN chinook.invoices i
+ON c.CustomerId = i.CustomerId;
+
+-- 8. How many Invoices were there in 2009?
+SELECT COUNT(*)
+FROM chinook.invoices
+WHERE InvoiceDate BETWEEN '2009-01-01' AND '2009-12-31';
+
+-- 9. What are the total sales for 2009?
+SELECT SUM(Total) 
+FROM chinook.invoices
+WHERE InvoiceDate BETWEEN '2009-01-01' AND '2009-12-31';
+
+-- 10. Write a query that includes the purchased track name with each invoice line ID.
+SELECT t.Name, 
+    i.InvoiceLineId
+FROM chinook.Invoice_items i
+JOIN chinook.Tracks t
+ON i.TrackId = t.TrackId;
+
+-- 11. Write a query that includes the purchased track name AND artist name with each invoice line ID.
+SELECT t.Name AS Track, ar.Name AS Artist, i.InvoiceLineId
+  FROM chinook.tracks t
+  LEFT JOIN chinook.invoice_items i
+  ON t.TrackId = i.TrackId
+  INNER JOIN chinook.albums a 
+  ON t.AlbumId = a.AlbumId
+  LEFT JOIN chinook.artists ar 
+  ON a.ArtistId = ar.ArtistId;
+
+-- 12. Provide a query that shows all the Tracks, and include the Album name, Media type, and Genre.
+SELECT t.name AS "Track Name", 
+    a.title AS "Album Title", 
+    m.name AS "Media Type", 
+    g.name AS "Genre"
+FROM chinook.tracks t
+JOIN chinook.albums a 
+ON t.AlbumID = a.AlbumID
+JOIN chinook.media_types m
+ON t.MediaTypeID = m.MediaTypeID
+JOIN chinook.genres g
+ON t.GenreID = g.GenreID;
+
+-- 13. Show the total sales made by each sales agent.
+SELECT e.FirstName, 
+    e.LastName, 
+    ROUND(SUM(i.Total), 2) AS 'Total Sales'
+FROM chinook.employees e
+JOIN chinook.customers c
+ON e.EmployeeId = c.SupportRepId
+JOIN chinook.invoices i
+ON c.CustomerId = i.CustomerId
+WHERE e.Title = 'Sales Support Agent'
+GROUP BY e.FirstName;
+
+-- 14. Which sales agent made the most dollars in sales in 2009?
+SELECT e.FirstName, 
+    e.LastName, 
+    ROUND(SUM(i.Total), 2) AS 'Total Sales'
+FROM chinook.employees e
+JOIN chinook.customers c
+ON e.EmployeeId = c.SupportRepId
+JOIN chinook.invoices i
+ON c.CustomerId = i.CustomerId
+WHERE e.Title = 'Sales Support Agent'
+AND i.InvoiceDate like '2009%'
+GROUP BY e.FirstName
+ORDER BY (round(sum(i.Total), 2)) DESC LIMIT 1;
