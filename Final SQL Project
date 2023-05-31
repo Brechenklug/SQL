@@ -123,7 +123,7 @@ AND i.InvoiceDate like '2009%'
 GROUP BY e.FirstName
 ORDER BY (round(sum(i.Total), 2)) DESC LIMIT 1;
 
--- 15. List the longest track name with its artist and genre. Also, include how long the track is in minutes.
+-- 15. List the LONGEST track name with its artist and genre. Also, include how long the track is in minutes.
 SELECT t.Name AS 'Track Name', 
     ar.Name AS Artist, 
     g.Name as Genre, 
@@ -138,7 +138,7 @@ ON a.ArtistId = ar.ArtistId
 ORDER BY minutes DESC
 LIMIT 1;
 
--- 16. List the shortest track with its artist and genre. Also, include how long the track is in seconds. 
+-- 16. List the SHORTEST track with its artist and genre. Also, include how long the track is in seconds. 
 SELECT t.Name AS 'Track Name', 
     ar.Name AS Artist, 
     g.Name as Genre, 
@@ -162,3 +162,70 @@ JOIN chinook.playlists p
 ON pt.PlaylistId = p.PlaylistId
 WHERE p.Name = 'Heavy Metal Classic'
 ORDER BY t.milliseconds ASC;
+
+-- 18. How many different countries are the customers from?
+SELECT COUNT(DISTINCT Country) AS 'Number of Countries'
+FROM chinook.customers;
+
+-- 19. What country is the OLDEST invoice from?
+SELECT BillingCountry, 
+    InvoiceDate
+FROM chinook.invoices
+ORDER BY InvoiceDate ASC
+LIMIT 1;
+
+-- 20. What country is the NEWEST invoice from?
+SELECT BillingCountry, 
+    InvoiceDate
+FROM chinook.invoices
+ORDER BY InvoiceDate DESC
+LIMIT 1;
+
+-- 21. What employee has been hired the longest and what is their job?
+SELECT FirstName, 
+    LastName, 
+    HireDate, 
+    Title
+FROM chinook.employees
+ORDER BY HireDate
+LIMIT 1;
+
+-- 22. Who is the OLDEST employee?
+SELECT FirstName, LastName, MIN(BirthDate)
+FROM chinook.employees;
+
+-- 23. Who is the YOUNGEST employee?
+SELECT FirstName, LastName, MAX(BirthDate)
+FROM chinook.employees;
+
+-- 24. Do any artists have multiple albums? YES
+SELECT ar.Name AS Artists, 
+    a.Title AS Albums
+FROM chinook.albums a
+JOIN chinook.artists ar
+ON a.ArtistId = ar.ArtistId
+ORDER BY Artists;
+
+-- 25. Who is the composer and artist for the LONGEST track? (Name the track as well)
+SELECT t.Name AS Track, 
+    t.Composer AS Composer,
+    ar.Name AS Artist
+FROM chinook.tracks t
+JOIN chinook.albums a
+ON t.AlbumId = a.AlbumId
+JOIN chinook.artists ar
+ON a.ArtistId = ar.ArtistId
+ORDER BY t.Milliseconds DESC
+LIMIT 1;
+
+-- 26. Who is the composer and artist for the SHORTEST track? (Name the track as well)
+SELECT t.Name AS Track, 
+    t.Composer AS Composer,
+    ar.Name AS Artist
+FROM chinook.tracks t
+JOIN chinook.albums a
+ON t.AlbumId = a.AlbumId
+JOIN chinook.artists ar
+ON a.ArtistId = ar.ArtistId
+ORDER BY t.Milliseconds ASC
+LIMIT 1;
